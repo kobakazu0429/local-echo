@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/xterm@4.13.0/css/xterm.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.13.0/lib/xterm.min.js"></script>
+    <title>Document</title>
+    <style>
+      #terminal {
+        width: 600px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h2>info</h2>
+      <h3>[feature] auto complete</h3>
+      <ul>
+        <li>type `l` and tab key, will be apperd `ls`</li>
+        <li>next, type `some` and tab key</li>
+      </ul>
+    </div>
+    <div id="terminal"></div>
+  </body>
+  <script src="./index.umd.js"></script>
+  <!-- <script src="./main.ts"></script> -->
+  <script>
+    const { LocalEchoAddon } = window.localEcho;
+
+    const term = new Terminal();
+    term.open(document.getElementById("terminal"));
+
+    // Create a local controller
+    const localEcho = new LocalEchoAddon();
+    term.loadAddon(localEcho);
+
+    // Create some auto-comple handlers
+    localEcho.addAutocompleteHandler((index) => {
+      if (index !== 0) return [];
+      return ["bash", "ls", "ps", "cp", "chown", "chmod"];
+    });
+    localEcho.addAutocompleteHandler((index) => {
+      if (index === 0) return [];
+      return ["some-file", "another-file", ".git", ".gitignore"];
+    });
+
+    // Infinite loop of reading lines
+    const prompt = "~$ ";
+    const readLine = async () => {
+      const input = await localEcho.read(prompt);
+      localEcho.println("You typed: '" + input + "'");
+      readLine();
+    };
+    readLine();
+  </script>
+</html>
