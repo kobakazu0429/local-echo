@@ -1,6 +1,6 @@
 {
   "name": "@kobakazu0429/xterm-local-echo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A local echo controller for xterm.js",
   "type": "module",
   "source": "./src/index.ts",
